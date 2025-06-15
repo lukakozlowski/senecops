@@ -2,21 +2,22 @@
 resource "random_password" "wordpress" {
   length           = 32
   min_special      = 5
-  override_special = "!#$%&*()-_=+[]{}<>?"
+  override_special = "!#$%*()-_=+[]{}<>?"
 }
 
 # PSQL - Database credentials
-resource "kubernetes_secret" "psql_wp_creds_secret" {
+resource "kubernetes_secret" "db_wp_creds_secret" {
   metadata {
-    name = "psql-wp-creds"
+    name = "db-wp-creds"
     namespace = var.namespace
   }
 
   data = {
-    username = base64encode(var.psql_username)
-    password = base64encode(var.psql_password)
-    host     = base64encode(var.psql_host)
-    database = base64encode(var.psql_db_name)
+    username = base64encode(var.username)
+    password = base64encode(var.password)
+    host     = base64encode(var.host)
+    database = base64encode(var.db_name)
+    port     = base64encode(var.port)
   }
 
   type = "Opaque"
@@ -29,7 +30,7 @@ resource "helm_release" "wordpress" {
   repository = "https://charts.bitnami.com/bitnami"
   chart      = "wordpress"
   version    = var.wordpress_ver
-  timeout    = 600
+  timeout    = 300
 
   values = [
     yamlencode({
@@ -38,20 +39,20 @@ resource "helm_release" "wordpress" {
       wordpressEmail    = "lkz@spyro-soft.com" #TODO: could be general email address for IT department
       wordpressBlogName = "SenecOps"
 
-      # mariadb = {
-      #   enabled = false
-      # }
-      #
-      externalDatabase = {
-        host     = var.psql_host
-        port     = var.psql_port
-        user     = var.psql_username
-        password = var.psql_password
-        database = var.psql_db_name
-        # existingSecret = kubernetes_secret.psql_wp_creds_secret.metadata.0.name
+      mariadb = {
+        enabled = false
       }
 
-      # replicaCount: 3
+      externalDatabase = {
+        host     = var.host
+        port     = var.port
+        user     = var.username
+        password = var.password
+        database = var.db_name
+        # existingSecret = kubernetes_secret.db_wp_creds_secret.metadata.0.name
+      }
+
+      replicaCount: 3
 
       ingress = {
         enabled = true
@@ -70,13 +71,6 @@ resource "helm_release" "wordpress" {
         }
       }
 
-      # persistence = {
-      #   enabled = true
-      #   storageClass = ""
-      #   size    = "10Gi"
-      #   accessMode: "ReadWriteMany"
-      # }
-
       service = {
         type = "ClusterIP"
       }
@@ -84,6 +78,6 @@ resource "helm_release" "wordpress" {
   ]
 
   depends_on = [
-    kubernetes_secret.psql_wp_creds_secret
+    kubernetes_secret.db_wp_creds_secret
   ]
 }

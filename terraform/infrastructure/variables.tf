@@ -18,6 +18,11 @@ variable "domain_name" {
   type        = string
 }
 
+variable "db_name" {
+  description = "Database name for WordPress"
+  type        = string
+}
+
 variable "az_client_id" {
   description = "Azure - Auth value client_id for service principal"
   type        = string

@@ -23,7 +23,18 @@ module "psql" {
 
   location = var.location
   name     = local.name
-  db_name  = "wordpress"
+  db_name  = var.db_name
+  rg_name  = azurerm_resource_group.main.name
+  tags     = local.tags
+}
+
+# MySQL
+module "mysql" {
+  source = "../modules/mysql"
+
+  location = var.location
+  name     = local.name
+  db_name  = var.db_name
   rg_name  = azurerm_resource_group.main.name
   tags     = local.tags
 }
@@ -37,19 +48,19 @@ resource "azurerm_public_ip" "pip_ingress" {
   sku                 = "Standard"
   sku_tier            = "Regional"
   domain_name_label   = "pip-ingress-${var.env_name}"
-  tags = local.tags
+  tags                = local.tags
 }
 
 # Tools like: cert-manager, ingress-nginx, external-dns
 module "tools" {
   source = "../modules/tools"
 
-  cert_manager_ver      = "v1.16.4"
-  ingress_nginx_ver     = "4.12.0"
-  external_dns_ver      = "8.8.4"
-  domain_name           = var.domain_name
-  aws_access_key_id     = var.aws_access_key_id
-  aws_access_key_secret = var.aws_access_key_secret
+  cert_manager_ver          = "v1.16.4"
+  ingress_nginx_ver         = "4.12.0"
+  external_dns_ver          = "8.8.4"
+  domain_name               = var.domain_name
+  aws_access_key_id         = var.aws_access_key_id
+  aws_access_key_secret     = var.aws_access_key_secret
   ingress_domain_name_label = azurerm_public_ip.pip_ingress.domain_name_label
   ingress_ip_address        = azurerm_public_ip.pip_ingress.ip_address
 
@@ -71,7 +82,7 @@ resource "kubernetes_manifest" "cluster_issuer" {
 }
 
 # Namespace - WordPress (or dedicated for general app usage)
-resource "kubernetes_namespace" "wordpress" {
+resource "kubernetes_namespace" "app" {
   metadata {
     name = "wordpress"
   }
@@ -85,10 +96,11 @@ resource "kubernetes_namespace" "wordpress" {
 module "wordpress" {
   source = "../modules/wordpress"
 
-  psql_db_name  = module.psql.psql_db_name
-  psql_host     = module.psql.psql_host
-  psql_username = module.psql.psql_username
-  psql_password = module.psql.psql_password
+  db_name       = var.db_name
+  host          = module.mysql.host
+  username      = module.mysql.username
+  password      = module.mysql.password
+  port          = 3306 #5432
   wordpress_ver = "23.1.29"
   domain_name   = "wp.${var.domain_name}"
   namespace     = "wordpress"
@@ -96,6 +108,8 @@ module "wordpress" {
   depends_on = [
     module.aks,
     module.tools,
-    kubernetes_namespace.wordpress
+    module.psql,
+    module.mysql,
+    kubernetes_namespace.app
   ]
 }

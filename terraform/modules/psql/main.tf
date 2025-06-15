@@ -1,11 +1,11 @@
 # Generate - PSQL Password
 resource "random_password" "postgresql" {
-  length           = 32
-  min_special      = 5
-  override_special = "!#$%&*()-_=+[]{}<>?"
+  length           = 24
+  min_special      = 4
+  override_special = "!*()-_=+[]<>?"
 }
 
-# PSQL
+# PSQL Server
 resource "azurerm_postgresql_flexible_server" "main" {
   name                   = "psql-${var.name}"
   location               = var.location
@@ -21,6 +21,7 @@ resource "azurerm_postgresql_flexible_server" "main" {
 
   identity {
     type = "SystemAssigned"
+    identity_ids = []
   }
 
   lifecycle {
@@ -38,7 +39,7 @@ resource "azurerm_postgresql_flexible_server_database" "database" {
   collation = "en_US.utf8"
 }
 
-# PSQL Firewall Azure
+# PSQL Firewall - Azure
 resource "azurerm_postgresql_flexible_server_firewall_rule" "fw_azure_services" {
   name             = "azure_services"
   server_id        = azurerm_postgresql_flexible_server.main.id

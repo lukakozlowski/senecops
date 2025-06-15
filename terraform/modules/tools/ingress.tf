@@ -15,11 +15,6 @@ resource "helm_release" "ingress" {
   version    = var.ingress_nginx_ver
   timeout = 300
 
-  # set {
-  #   name  = "controller.replicaCount"
-  #   value = 2
-  # }
-
   set {
     name  = "controller.service.appProtocol"
     value = false

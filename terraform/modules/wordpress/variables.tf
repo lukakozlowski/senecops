@@ -13,30 +13,29 @@ variable "namespace" {
   type = string
 }
 
-variable "psql_username" {
-  description = "PostgreSQL username"
+variable "username" {
+  description = "Database username"
   type = string
   sensitive = true
 }
 
-variable "psql_password" {
-  description = "PostgreSQL password"
+variable "password" {
+  description = "Database password"
   type = string
   sensitive = true
 }
 
-variable "psql_db_name" {
-  description = "PostgreSQL database name"
+variable "db_name" {
+  description = "Database name"
   type = string
 }
 
-variable "psql_host" {
-  description = "PostgreSQL host name address, like: psql.example.com"
+variable "host" {
+  description = "Database server host address, like: psql.example.com"
   type = string
 }
 
-variable "psql_port" {
-  description = "PostgreSQL port number"
+variable "port" {
+  description = "Server port number"
   type = number
-  default = 5432
 }

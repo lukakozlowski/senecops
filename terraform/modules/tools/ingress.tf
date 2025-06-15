@@ -13,7 +13,7 @@ resource "helm_release" "ingress" {
   repository = "https://kubernetes.github.io/ingress-nginx"
   namespace  = "ingress-nginx"
   version    = var.ingress_nginx_ver
-  timeout = 300
+  timeout    = 300
 
   set {
     name  = "controller.service.appProtocol"

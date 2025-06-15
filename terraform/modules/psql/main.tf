@@ -20,7 +20,7 @@ resource "azurerm_postgresql_flexible_server" "main" {
   tags                   = var.tags
 
   identity {
-    type = "SystemAssigned"
+    type         = "SystemAssigned"
     identity_ids = []
   }
 
@@ -37,6 +37,13 @@ resource "azurerm_postgresql_flexible_server_database" "database" {
   server_id = azurerm_postgresql_flexible_server.main.id
   charset   = "UTF8"
   collation = "en_US.utf8"
+}
+
+# PSQL Configuration
+resource "azurerm_postgresql_flexible_server_configuration" "tls_off" {
+  name      = "require_secure_transport"
+  server_id = azurerm_postgresql_flexible_server.main.id
+  value     = "off"
 }
 
 # PSQL Firewall - Azure

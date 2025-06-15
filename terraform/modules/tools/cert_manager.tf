@@ -10,7 +10,7 @@ resource "helm_release" "cert_manager" {
   chart      = "cert-manager"
   version    = var.cert_manager_ver
   namespace  = kubernetes_namespace.cert_manager.metadata.0.name
-  timeout = 300
+  timeout    = 300
 
   set {
     name  = "installCRDs"

@@ -5,15 +5,15 @@ resource "random_password" "wordpress" {
   override_special = "!#$%*()-_=+[]{}<>?"
 }
 
-# PSQL - Database credentials
+# Database credentials
 resource "kubernetes_secret" "db_wp_creds_secret" {
   metadata {
-    name = "db-wp-creds"
+    name      = "db-wp-creds"
     namespace = var.namespace
   }
 
   data = {
-    username = base64encode(var.username)
+    user     = base64encode(var.user)
     password = base64encode(var.password)
     host     = base64encode(var.host)
     database = base64encode(var.db_name)
@@ -26,7 +26,7 @@ resource "kubernetes_secret" "db_wp_creds_secret" {
 # WordPress
 resource "helm_release" "wordpress" {
   name       = "wordpress"
-  namespace = var.namespace
+  namespace  = var.namespace
   repository = "https://charts.bitnami.com/bitnami"
   chart      = "wordpress"
   version    = var.wordpress_ver
@@ -45,29 +45,29 @@ resource "helm_release" "wordpress" {
 
       externalDatabase = {
         host     = var.host
-        port     = var.port
-        user     = var.username
+        user     = var.user
         password = var.password
         database = var.db_name
+        port     = var.port
         # existingSecret = kubernetes_secret.db_wp_creds_secret.metadata.0.name
       }
 
-      replicaCount: 3
+      # replicaCount: 3
 
       ingress = {
-        enabled = true
+        enabled  = true
         hostname = var.domain_name
-        ingressClassName: "nginx"
+        ingressClassName : "nginx"
         pathType = "ImplementationSpecific"
-        path = "/"
-        tls = true
+        path     = "/"
+        tls      = true
 
         annotations = {
-          "cert-manager.io/cluster-issuer"              = "letsencrypt-prod"
-          "kubernetes.io/ingress.class"                 = "nginx"
-          "nginx.ingress.kubernetes.io/use-regex"       = "true"
-          "nginx.ingress.kubernetes.io/ssl-redirect"    = "true"
-          "external-dns.alpha.kubernetes.io/hostname"   = var.domain_name
+          "cert-manager.io/cluster-issuer"            = "letsencrypt-prod"
+          "kubernetes.io/ingress.class"               = "nginx"
+          "nginx.ingress.kubernetes.io/use-regex"     = "true"
+          "nginx.ingress.kubernetes.io/ssl-redirect"  = "true"
+          "external-dns.alpha.kubernetes.io/hostname" = var.domain_name
         }
       }
 

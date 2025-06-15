@@ -18,7 +18,7 @@ resource "azurerm_mysql_flexible_server" "main" {
 
   storage {
     auto_grow_enabled = true
-    size_gb = 32
+    size_gb           = 32
   }
 
   lifecycle {
@@ -30,18 +30,26 @@ resource "azurerm_mysql_flexible_server" "main" {
 
 # MySQL Database
 resource "azurerm_mysql_flexible_database" "database" {
-  name      = var.db_name
-  charset   = "UTF8"
-  collation = "en_US.utf8"
+  name                = var.db_name
+  charset             = "utf8mb4"
+  collation           = "utf8mb4_unicode_ci"
   resource_group_name = var.rg_name
-  server_name = azurerm_mysql_flexible_server.main.name
+  server_name         = azurerm_mysql_flexible_server.main.name
+}
+
+# MySQL Configuration
+resource "azurerm_mysql_flexible_server_configuration" "tls_off" {
+  name                = "require_secure_transport"
+  server_name         = azurerm_mysql_flexible_server.main.name
+  value               = "off"
+  resource_group_name = var.rg_name
 }
 
 # MySQL Firewall - Azure
 resource "azurerm_mysql_flexible_server_firewall_rule" "fw_azure_services" {
-  name             = "azure_services"
-  server_name        = azurerm_mysql_flexible_server.main.name
+  name                = "azure_services"
+  server_name         = azurerm_mysql_flexible_server.main.name
   resource_group_name = var.rg_name
-  start_ip_address = "0.0.0.0"
-  end_ip_address   = "0.0.0.0"
+  start_ip_address    = "0.0.0.0"
+  end_ip_address      = "0.0.0.0"
 }

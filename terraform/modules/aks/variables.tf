@@ -15,21 +15,21 @@ variable "name" {
 
 variable "tags" {
   description = "List of tags"
-  type = map(string)
+  type        = map(string)
 }
 
 variable "aks_sku_tier" {
   description = "SKU tier for AKS, possible options: Free, Standard and Premium. (which includes the Uptime SLA)"
-  type = string
-  default = "Free"
+  type        = string
+  default     = "Free"
 }
 
 variable "aks_version" {
   description = "AKS version"
-  type = string
+  type        = string
 }
 
 variable "aks_node_vm_size" {
   description = "VM size for AKS node pool"
-  type = string
+  type        = string
 }

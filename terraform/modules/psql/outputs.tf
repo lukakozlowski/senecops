@@ -2,7 +2,7 @@ output "password" {
   value = random_password.postgresql.result
 }
 
-output "username" {
+output "user" {
   value = azurerm_postgresql_flexible_server.main.administrator_login
 }
 
@@ -12,4 +12,8 @@ output "host" {
 
 output "db_name" {
   value = azurerm_postgresql_flexible_server_database.database.name
+}
+
+output "port" {
+  value = 5432
 }

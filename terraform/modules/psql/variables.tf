@@ -15,10 +15,10 @@ variable "name" {
 
 variable "db_name" {
   description = "Database name"
-  type = string
+  type        = string
 }
 
 variable "tags" {
   description = "List of tags"
-  type = map(string)
+  type        = map(string)
 }

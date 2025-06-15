@@ -2,7 +2,7 @@ output "password" {
   value = random_password.mysql.result
 }
 
-output "username" {
+output "user" {
   value = azurerm_mysql_flexible_server.main.administrator_login
 }
 
@@ -12,4 +12,8 @@ output "host" {
 
 output "db_name" {
   value = azurerm_mysql_flexible_database.database.name
+}
+
+output "port" {
+  value = 3306
 }

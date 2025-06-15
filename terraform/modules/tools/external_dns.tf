@@ -20,37 +20,59 @@ resource "kubernetes_secret" "external_dns_aws_secret" {
 
 resource "helm_release" "external_dns" {
   name       = "external-dns"
-  repository = "https://kubernetes-sigs.github.io/external-dns/"
+  repository = "https://charts.bitnami.com/bitnami"
   chart      = "external-dns"
-  version    = var.external_dns_ver
+  version    = "6.6.1" #var.external_dns_ver
   namespace  = kubernetes_namespace.external_dns.metadata[0].name
   create_namespace = false
 
-  values = [
-    <<-EOF
-    provider: aws
-    policy: sync
-    zoneType: public
+  set {
+    name  = "provider"
+    value = "aws"
+  }
 
-    txtOwnerId: external-dns
-    domainFilters:
-      - ${var.domain_name}
+  set {
+    name  = "policy"
+    value = "sync"
+  }
 
-    env:
-      - name: AWS_ACCESS_KEY_ID
-        valueFrom:
-          secretKeyRef:
-            name: aws-credentials
-            key: AWS_ACCESS_KEY_ID
-      - name: AWS_SECRET_ACCESS_KEY
-        valueFrom:
-          secretKeyRef:
-            name: aws-credentials
-            key: AWS_SECRET_ACCESS_KEY
-    EOF
-  ]
+  set {
+    name  = "domainFilters[0]"
+    value = var.domain_name
+  }
+
+  set {
+    name  = "txtOwnerId"
+    value = "external-dns"
+  }
+
+  set {
+    name  = "aws.zoneType"
+    value = "public"
+  }
+
+  set {
+    name  = "aws.credentials.secretKey"
+    value = var.aws_access_key_secret
+  }
+
+  set {
+    name  = "aws.credentials.accessKey"
+    value = var.aws_access_key_id
+  }
+
+  # set {
+  #   name  = "aws.credentials.secretName"
+  #   value = "aws-credentials"
+  # } # TODO: haven't enough time to fix that :)
+
+  # set {
+  #   name  = "aws.credentials.mountPath"
+  #   value = "/.aws"
+  # }
 
   depends_on = [
-    kubernetes_namespace.external_dns
+    kubernetes_namespace.external_dns,
+    kubernetes_secret.external_dns_aws_secret
   ]
 }

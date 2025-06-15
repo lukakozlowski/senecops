@@ -29,3 +29,6 @@ variable "aws_access_key_secret" {
   type = string
   sensitive = true
 }
+
+variable "ingress_ip_address" {}
+variable "ingress_domain_name_label" {}

@@ -4,19 +4,19 @@ resource "kubernetes_namespace" "external_dns" {
   }
 }
 
-resource "kubernetes_secret" "external_dns_aws_secret" {
-  metadata {
-    name      = "aws-credentials"
-    namespace = kubernetes_namespace.external_dns.metadata[0].name
-  }
-
-  data = {
-    AWS_ACCESS_KEY_ID     = base64encode(var.aws_access_key_id)
-    AWS_SECRET_ACCESS_KEY = base64encode(var.aws_access_key_secret)
-  }
-
-  type = "Opaque"
-}
+# resource "kubernetes_secret" "external_dns_aws_secret" {
+#   metadata {
+#     name      = "aws-credentials"
+#     namespace = kubernetes_namespace.external_dns.metadata[0].name
+#   }
+#
+#   data = {
+#     AWS_ACCESS_KEY_ID     = base64encode(var.aws_access_key_id)
+#     AWS_SECRET_ACCESS_KEY = base64encode(var.aws_access_key_secret)
+#   }
+#
+#   type = "Opaque"
+# }
 
 resource "helm_release" "external_dns" {
   name       = "external-dns"
@@ -25,6 +25,7 @@ resource "helm_release" "external_dns" {
   version    = "6.6.1" #var.external_dns_ver
   namespace  = kubernetes_namespace.external_dns.metadata[0].name
   create_namespace = false
+  timeout = 600
 
   set {
     name  = "provider"
@@ -72,7 +73,7 @@ resource "helm_release" "external_dns" {
   # }
 
   depends_on = [
-    kubernetes_namespace.external_dns,
-    kubernetes_secret.external_dns_aws_secret
+    kubernetes_namespace.external_dns
+    # kubernetes_secret.external_dns_aws_secret
   ]
 }

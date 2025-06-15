@@ -57,6 +57,7 @@ resource "helm_release" "wordpress" {
         enabled = true
         hostname = var.domain_name
         ingressClassName: "nginx"
+        pathType = "ImplementationSpecific"
         path = "/"
         tls = true
 
@@ -76,9 +77,9 @@ resource "helm_release" "wordpress" {
       #   accessMode: "ReadWriteMany"
       # }
 
-      # service = {
-      #   type = "LoadBalancer"
-      # }
+      service = {
+        type = "ClusterIP"
+      }
     })
   ]
 

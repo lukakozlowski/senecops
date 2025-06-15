@@ -37,7 +37,6 @@ resource "azurerm_public_ip" "pip_ingress" {
   sku                 = "Standard"
   sku_tier            = "Regional"
   domain_name_label   = "pip-ingress-${var.env_name}"
-
   tags = local.tags
 }
 
@@ -45,8 +44,8 @@ resource "azurerm_public_ip" "pip_ingress" {
 module "tools" {
   source = "../modules/tools"
 
-  cert_manager_ver      = "v1.18.0"
-  ingress_nginx_ver     = "4.12.3"
+  cert_manager_ver      = "v1.16.4"
+  ingress_nginx_ver     = "4.12.0"
   external_dns_ver      = "8.8.4"
   domain_name           = var.domain_name
   aws_access_key_id     = var.aws_access_key_id
@@ -59,6 +58,7 @@ module "tools" {
   ]
 }
 
+# TODO: it should be replaced with other provider which allows us to deploy it even if aks and cert-manager api is not available (during plan it fail) should be commented before deploy
 # Cluster Issuer - Let's Encrypt
 resource "kubernetes_manifest" "cluster_issuer" {
   manifest = yamldecode(templatefile("../manifests/cluster_issuer.yaml", {

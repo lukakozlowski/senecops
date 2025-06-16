@@ -21,3 +21,4 @@ jobs:
       terraform_command: "apply --auto-approve"
     secrets: inherit
     needs: [ dev_plan ]
+    

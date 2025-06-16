@@ -8,7 +8,7 @@ az_subscription_id = "234514-35235-4325654-634563456"
 aws_access_key_id     = "SDFGSDFGDFGSDFGGD"
 aws_access_key_secret = "HGDFHDF5RB5BBSBYSBBGSBSSVGSGDVGG"
 
-# Variables
+# Variables (moved it into variables.tf - it just for quicker implementation)
 env_name     = "dev"
 location     = "westeurope"
 project_name = "app"

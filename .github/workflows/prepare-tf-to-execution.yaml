@@ -1,0 +1,62 @@
+name: "Prepare Terraform to execution"
+run-name: "Setup terraform"
+
+on:
+  workflow_call:
+    inputs:
+      terraform_command:
+        description: "Commands passed to Terraform, allowed values: 'plan', 'apply --auto-approve'."
+        type: string
+        required: true
+        default: plan
+      terraform_version:
+        description: "Terraforms version to be used in script"
+        type: string
+        default: "1.9.8"
+
+permissions:
+  id-token: write
+  contents: read
+  
+env:
+  path: ${{ github.workspace }}/terraform/infrastructure
+
+jobs:
+  tf_job:
+    name: "Terraform ${{ inputs.terraform_command }} in ${{ inputs.environment }}"
+    runs-on: ["general", "container"]
+    env:
+      TF_AZ_CLIENT_ID: ${{ secrets.AZ_CLIENT_ID }}
+      TF_AZ_CLIENT_SECRET: ${{ secrets.AZ_CLIENT_SECRET }}
+      TF_AZ_SUBSCRIPTION_ID: ${{ vars.AZ_SUBSCRIPTION_ID }}
+      TF_AZ_TENANT_ID: ${{ vars.AZ_TENANT_ID }}
+      TF_AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      TF_AWS_ACCESS_KEY_SECRET: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
+      BACKEND_CONFIG: 'backend/dev.tfbackend'
+      TF_PLAN_OUTPUT_FILE_NAME: 'dev.tfplan'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.8.2
+        
+      - name: Terraform init
+        id: tf_init
+        run: terraform init --backend-config="${{ env.BACKEND_CONFIG }}"
+        working-directory: ${{ env.path }}
+
+      - name: "Terraform plan"
+        uses: ./.github/actions/tf-plan
+        with:
+          path:  ${{ env.path }}
+        if: ${{ inputs.terraform_command == 'plan' || github.event_name == 'pull_request' }}
+
+      - name: "Terraform apply"
+        uses: ./.github/actions/tf-apply
+        with:
+          path:  ${{ env.path }}
+        if: ${{ inputs.terraform_command == 'apply --auto-approve' }}
+

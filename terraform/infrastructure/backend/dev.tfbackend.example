@@ -1,0 +1,3 @@
+resource_group_name  = "xyz"
+storage_account_name = "xyz"
+container_name       = "xyz"

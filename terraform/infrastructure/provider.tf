@@ -43,6 +43,14 @@ provider "aws" {
   region     = "eu-central-1"
 }
 
+provider "kubectl" {
+  host                   = module.aks.aks.kube_config.0.host
+  client_certificate     = base64decode(module.aks.aks.kube_config.0.client_certificate)
+  client_key             = base64decode(module.aks.aks.kube_config.0.client_key)
+  cluster_ca_certificate = base64decode(module.aks.aks.kube_config.0.cluster_ca_certificate)
+  load_config_file       = false
+}
+
 provider "helm" {
   kubernetes {
     host                   = module.aks.aks.kube_config.0.host

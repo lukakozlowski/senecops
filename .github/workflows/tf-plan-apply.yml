@@ -9,6 +9,12 @@ on:
     branches:
     - main
 
+env:
+  ARM_CLIENT_ID: ${{ secrets.AZ_CLIENT_ID }}
+  ARM_CLIENT_SECRET: ${{ secrets.AZ_CLIENT_SECRET }}
+  ARM_SUBSCRIPTION_ID: ${{ vars.AZ_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ vars.AZ_TENANT_ID }}
+  
 ##Special permissions required for OIDC authentication
 #permissions:
 #  id-token: write

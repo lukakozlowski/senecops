@@ -1,4 +1,7 @@
-# senecops - if not exists and it is a first run and only storage account for .tfstate doesn't exist
+# SenecOps
+
+### BEFORE YOU START
+<b>if not exists and it is a first run and only storage account for .tfstate doesn't exist </b>
 1. in your terminal type a az cli command to login to azure: (replace upparcase words by proper values)
 `az login --service-principal --username "APP_ID" --password "CLIENT_SECRET" --tenant "TENANT_ID"`
 2. create resource group by a below command, where we will create in next step a storage account to keep tfstate files.
@@ -9,3 +12,8 @@
 `az storage container create --name "terraform" --account-name "stiaacsenops"`
 5. adjust file: dev.tfbackend under path: terraform/infrastructure/backend/ with above values
 
+### CI/CD:
+
+1. github action as a infrastructure provisioning process
+`https://github.com/lukakozlowski/senecops/actions`
+2. 

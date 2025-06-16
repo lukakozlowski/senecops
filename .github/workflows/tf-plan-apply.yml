@@ -15,11 +15,11 @@ env:
   ARM_SUBSCRIPTION_ID: ${{ vars.AZ_SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ vars.AZ_TENANT_ID }}
 
-##Special permissions required for OIDC authentication
-#permissions:
-#  id-token: write
-#  contents: read
-#  pull-requests: write
+#Special permissions required for OIDC authentication
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
 
 jobs:
   terraform-plan:

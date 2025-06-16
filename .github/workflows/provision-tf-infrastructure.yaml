@@ -1,4 +1,4 @@
-name: "Redburn Auth Infrastructure Provisioning"
+name: "Infrastructure Provisioning"
 
 on:
   workflow_dispatch:
@@ -20,4 +20,4 @@ jobs:
     with:
       terraform_command: "apply --auto-approve"
     secrets: inherit
-    needs: [dev_plan]
+    needs: [ dev_plan ]

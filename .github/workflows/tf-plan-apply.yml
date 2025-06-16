@@ -15,19 +15,17 @@ permissions:
   contents: read
   pull-requests: write
 
-#These environment variables are used by the terraform azure provider to setup OIDD authenticate. 
-env:
-  TF_az_client_id: ${{ secrets.AZ_CLIENT_ID }}
-  TF_az_client_secret: ${{ secrets.AZ_CLIENT_SECRET }}
-  TF_az_subscription_id: ${{ vars.AZ_SUBSCRIPTION_ID }}
-  TF_az_tenant_id: ${{ vars.AZ_TENANT_ID }}
-  TF_aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  TF_aws_access_key_secret: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
-
 jobs:
   terraform-plan:
     name: 'Terraform Plan'
     runs-on: ubuntu-latest
+    env:
+      TF_az_client_id: ${{ secrets.AZ_CLIENT_ID }}
+      TF_az_client_secret: ${{ secrets.AZ_CLIENT_SECRET }}
+      TF_az_subscription_id: ${{ vars.AZ_SUBSCRIPTION_ID }}
+      TF_az_tenant_id: ${{ vars.AZ_TENANT_ID }}
+      TF_aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      TF_aws_access_key_secret: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
     outputs:
       tfplanExitCode: ${{ steps.tf-plan.outputs.exitcode }}
 
@@ -120,6 +118,13 @@ jobs:
     name: 'Terraform Apply'
     if: github.ref == 'refs/heads/main' && needs.terraform-plan.outputs.tfplanExitCode == 2
     runs-on: ubuntu-latest
+    env:
+      TF_az_client_id: ${{ secrets.AZ_CLIENT_ID }}
+      TF_az_client_secret: ${{ secrets.AZ_CLIENT_SECRET }}
+      TF_az_subscription_id: ${{ vars.AZ_SUBSCRIPTION_ID }}
+      TF_az_tenant_id: ${{ vars.AZ_TENANT_ID }}
+      TF_aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      TF_aws_access_key_secret: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
     environment: dev
     needs: [terraform-plan]
     

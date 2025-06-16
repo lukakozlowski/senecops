@@ -1,0 +1,4 @@
+resource_group_name  = "xyz" # resource group where storage account is placed
+storage_account_name = "xyz" # storage account name dedicated for iaac / terraform
+container_name       = "xyz" # container name in storage account
+key                  = "xyz" # file name

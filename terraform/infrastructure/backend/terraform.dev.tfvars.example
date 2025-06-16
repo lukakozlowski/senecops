@@ -1,0 +1,16 @@
+# Azure - Credentials
+az_client_id       = "4568467546254623456246546452364536"
+az_client_secret   = "4356F32543F532V55YFRGFHTRSH-VTREHVGH"
+az_tenant_id       = "5463456345-65436-34653-4565436"
+az_subscription_id = "234514-35235-4325654-634563456"
+
+# AWS - Credentials
+aws_access_key_id     = "SDFGSDFGDFGSDFGGD"
+aws_access_key_secret = "HGDFHDF5RB5BBSBYSBBGSBSSVGSGDVGG"
+
+# Variables (moved it into variables.tf - it just for quicker implementation)
+env_name     = "dev"
+location     = "westeurope"
+project_name = "app"
+domain_name  = "example.com"
+db_name      = "wordpress"

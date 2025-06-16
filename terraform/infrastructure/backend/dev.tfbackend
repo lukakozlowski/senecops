@@ -1,0 +1,4 @@
+resource_group_name  = "rg-iaac"
+storage_account_name = "stiaacsenops"
+container_name       = "terraform"
+key                  = "dev"

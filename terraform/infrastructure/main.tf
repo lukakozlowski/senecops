@@ -17,7 +17,7 @@ module "aks" {
   tags             = local.tags
 }
 
-# # PSQL
+# # PSQL # TODO: is not supported, possible but not recommended especially for production solution
 # module "psql" {
 #   source = "../modules/psql"
 #
@@ -28,7 +28,7 @@ module "aks" {
 #   tags     = local.tags
 # }
 
-# MySQL
+# MySQL # TODO: MariaDB is supported but not recommended, Azure decide to remove it from their offer, I could create a VM for that but decided to not spend so much time on that go get same result
 module "mysql" {
   source = "../modules/mysql"
 

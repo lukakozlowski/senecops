@@ -1,31 +1,31 @@
 variable "env_name" {
   description = "Environment name / type, like: dev, stg, prod, etc"
   type        = string
-  default = "dev" # TODO: should be moved to .tfvars file
+  default     = "dev" # TODO: should be moved to .tfvars file
 }
 
 variable "location" {
   description = "Geographical location of resources"
   type        = string
-  default = "westeurope" # TODO: should be moved to .tfvars file
+  default     = "westeurope" # TODO: should be moved to .tfvars file
 }
 
 variable "project_name" {
   description = "Project name / purpose, something that shortly describe destiny, fe. senops (senec ops), supp (support)"
   type        = string
-  default = "senopc" # TODO: should be moved to .tfvars file
+  default     = "senopc" # TODO: should be moved to .tfvars file
 }
 
 variable "domain_name" {
   description = "Domain name, fe. example.com"
   type        = string
-  default = "ops-bewerbung-9.pg.senecops.com" # TODO: should be moved to .tfvars file
+  default     = "ops-bewerbung-9.pg.senecops.com" # TODO: should be moved to .tfvars file
 }
 
 variable "db_name" {
   description = "Database name for WordPress"
   type        = string
-  default = "wordpress" # TODO: should be moved to .tfvars file
+  default     = "wordpress" # TODO: should be moved to .tfvars file
 }
 
 variable "az_client_id" {

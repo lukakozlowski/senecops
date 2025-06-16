@@ -13,7 +13,7 @@ variable "location" {
 variable "project_name" {
   description = "Project name / purpose, something that shortly describe destiny, fe. senops (senec ops), supp (support)"
   type        = string
-  default     = "senopc" # TODO: should be moved to .tfvars file
+  default     = "senops" # TODO: should be moved to .tfvars file
 }
 
 variable "domain_name" {

@@ -1,3 +1,4 @@
-resource_group_name  = "xyz"
-storage_account_name = "xyz"
-container_name       = "xyz"
+resource_group_name  = "rg-iaac"
+storage_account_name = "stiaacsenops"
+container_name       = "terraform"
+key                  = "dev"

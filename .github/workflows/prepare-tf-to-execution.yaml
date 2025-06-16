@@ -23,7 +23,7 @@ env:
 
 jobs:
   tf_job:
-    name: "Terraform ${{ inputs.terraform_command }} in ${{ inputs.environment }}"
+    name: "Terraform ${{ inputs.terraform_command }} in DEV"
     runs-on: ["general", "container"]
     env:
       TF_AZ_CLIENT_ID: ${{ secrets.AZ_CLIENT_ID }}

@@ -87,7 +87,7 @@ module "wordpress" {
   user          = module.mysql.user
   password      = module.mysql.password
   port          = module.mysql.port
-  wordpress_ver = "23.1.29"
+  wordpress_ver = "24.0.1"
   domain_name   = "wp.${var.domain_name}"
   namespace     = "wordpress"
 

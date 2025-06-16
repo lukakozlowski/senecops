@@ -17,20 +17,17 @@ permissions:
 
 #These environment variables are used by the terraform azure provider to setup OIDD authenticate. 
 env:
-  TF_AZ_CLIENT_ID: ${{ secrets.AZ_CLIENT_ID }}
-  TF_AZ_CLIENT_SECRET: ${{ secrets.AZ_CLIENT_SECRET }}
-  TF_AZ_SUBSCRIPTION_ID: ${{ vars.AZ_SUBSCRIPTION_ID }}
-  TF_AZ_TENANT_ID: ${{ vars.AZ_TENANT_ID }}
-  TF_AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  TF_AWS_ACCESS_KEY_SECRET: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
+  TF_az_client_id: ${{ secrets.AZ_CLIENT_ID }}
+  TF_az_client_secret: ${{ secrets.AZ_CLIENT_SECRET }}
+  TF_az_subscription_id: ${{ vars.AZ_SUBSCRIPTION_ID }}
+  TF_az_tenant_id: ${{ vars.AZ_TENANT_ID }}
+  TF_aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  TF_aws_access_key_secret: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
 
 jobs:
   terraform-plan:
     name: 'Terraform Plan'
     runs-on: ubuntu-latest
-    env:
-      #this is needed since we are running terraform with read-only permissions
-      ARM_SKIP_PROVIDER_REGISTRATION: true
     outputs:
       tfplanExitCode: ${{ steps.tf-plan.outputs.exitcode }}
 

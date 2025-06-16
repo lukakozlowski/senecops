@@ -1,13 +1,3 @@
-# terraform {
-#   backend "azurerm" {
-#     resource_group_name  = "xyz"
-#     storage_account_name = "xyz"
-#     container_name       = "xyz"
-#     key                  = "xyz.tfstate"
-#     subscription_id      = "xyz-xyz-xyz-xyz"
-#   }
-# }
-
 terraform {
   required_providers {
     azurerm = {
@@ -34,8 +24,8 @@ terraform {
 
 provider "azurerm" {
   features {}
-  # client_id       = var.az_client_id
-  # client_secret   = var.az_client_secret
+  client_id       = var.az_client_id
+  client_secret   = var.az_client_secret
   tenant_id       = var.az_tenant_id
   subscription_id = var.az_subscription_id
 }

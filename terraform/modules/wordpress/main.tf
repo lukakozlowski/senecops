@@ -5,23 +5,23 @@ resource "random_password" "wordpress" {
   override_special = "!#$%*()-_=+[]{}<>?"
 }
 
-# Database credentials
-resource "kubernetes_secret" "db_wp_creds_secret" {
-  metadata {
-    name      = "db-wp-creds"
-    namespace = var.namespace
-  }
-
-  data = {
-    user     = base64encode(var.user)
-    password = base64encode(var.password)
-    host     = base64encode(var.host)
-    database = base64encode(var.db_name)
-    port     = base64encode(var.port)
-  }
-
-  type = "Opaque"
-}
+# # Database credentials
+# resource "kubernetes_secret" "db_wp_creds_secret" {
+#   metadata {
+#     name      = "db-wp-creds"
+#     namespace = var.namespace
+#   }
+#
+#   data = {
+#     user     = base64encode(var.user)
+#     password = base64encode(var.password)
+#     host     = base64encode(var.host)
+#     database = base64encode(var.db_name)
+#     port     = base64encode(var.port)
+#   }
+#
+#   type = "Opaque"
+# }
 
 # WordPress
 resource "helm_release" "wordpress" {
@@ -52,7 +52,13 @@ resource "helm_release" "wordpress" {
         # existingSecret = kubernetes_secret.db_wp_creds_secret.metadata.0.name
       }
 
-      # replicaCount: 3
+      replicaCount : 3
+
+      persistence = {
+        enabled    = true
+        accessMode = "ReadWriteMany"
+        size       = "10Gi"
+      }
 
       ingress = {
         enabled  = true
@@ -71,6 +77,8 @@ resource "helm_release" "wordpress" {
         }
       }
 
+
+
       service = {
         type = "ClusterIP"
       }
@@ -78,6 +86,6 @@ resource "helm_release" "wordpress" {
   ]
 
   depends_on = [
-    kubernetes_secret.db_wp_creds_secret
+    # kubernetes_secret.db_wp_creds_secret
   ]
 }

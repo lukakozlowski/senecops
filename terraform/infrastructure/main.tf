@@ -17,20 +17,9 @@ module "aks" {
   tags             = local.tags
 }
 
-# PSQL
-module "psql" {
-  source = "../modules/psql"
-
-  location = var.location
-  name     = local.name
-  db_name  = var.db_name
-  rg_name  = azurerm_resource_group.main.name
-  tags     = local.tags
-}
-
-# # MySQL
-# module "mysql" {
-#   source = "../modules/mysql"
+# # PSQL
+# module "psql" {
+#   source = "../modules/psql"
 #
 #   location = var.location
 #   name     = local.name
@@ -38,6 +27,17 @@ module "psql" {
 #   rg_name  = azurerm_resource_group.main.name
 #   tags     = local.tags
 # }
+
+# MySQL
+module "mysql" {
+  source = "../modules/mysql"
+
+  location = var.location
+  name     = local.name
+  db_name  = var.db_name
+  rg_name  = azurerm_resource_group.main.name
+  tags     = local.tags
+}
 
 # Tools like: cert-manager, ingress-nginx, external-dns
 module "tools" {
@@ -83,10 +83,10 @@ module "wordpress" {
   source = "../modules/wordpress"
 
   db_name       = var.db_name
-  host          = module.psql.host
-  user          = module.psql.user
-  password      = module.psql.password
-  port          = module.psql.port
+  host          = module.mysql.host
+  user          = module.mysql.user
+  password      = module.mysql.password
+  port          = module.mysql.port
   wordpress_ver = "23.1.29"
   domain_name   = "wp.${var.domain_name}"
   namespace     = "wordpress"
@@ -94,8 +94,8 @@ module "wordpress" {
   depends_on = [
     module.aks,
     module.tools,
-    module.psql,
-    # module.mysql,
+    # module.psql,
+    module.mysql,
     kubernetes_namespace.app
   ]
 }

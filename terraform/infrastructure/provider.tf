@@ -19,7 +19,14 @@ terraform {
       source  = "hashicorp/aws"
       version = "=5.100.0"
     }
+
+    kubectl = {
+      source  = "gavinbunney/kubectl"
+      version = "=1.19.0"
+    }
   }
+  
+  backend "azurerm" {}
 }
 
 provider "azurerm" {

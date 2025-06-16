@@ -57,10 +57,32 @@ module "tools" {
 
 # TODO: it should be replaced with other provider which allows us to deploy it even if aks and cert-manager api is not available (during plan it fail) should be commented before deploy
 # Cluster Issuer - Let's Encrypt
-resource "kubernetes_manifest" "cluster_issuer" {
-  manifest = yamldecode(templatefile("../manifests/cluster_issuer.yaml", {
-    email_address = "lkz@soyro-soft.com"
-  }))
+# resource "kubernetes_manifest" "cluster_issuer" {
+#   manifest = yamldecode(templatefile("../manifests/cluster_issuer.yaml", {
+#     email_address = "lkz@soyro-soft.com"
+#   }))
+#
+#   depends_on = [
+#     module.tools
+#   ]
+# }
+resource "kubectl_manifest" "cluster_issuer" {
+  yaml_body = <<YAML
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: lkz@spyro-soft.com
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+      - http01:
+          ingress:
+            ingressClassName: nginx
+YAML
 
   depends_on = [
     module.tools

@@ -14,6 +14,58 @@
 
 ### CI/CD:
 
-1. github action as a infrastructure provisioning process
+1. GitHub action as an infrastructure provisioning process
 `https://github.com/lukakozlowski/senecops/actions`
-2. 
+
+### Terraform
+To run code locally, adjust terraform.dev.tfvars file with your values.
+
+1. initialize code and providers:
+`terraform init -backend-config=backend/dev.tfbackend`
+
+2. Prepare a tfplan:
+`terraform plan -var-file=backend/terraform.dev.tfvars`
+
+3. Review plan and run apply:
+`terraform apply -var-file=backend/terraform.dev.tfvars`
+
+Code structure:
+```text
+├── README.md
+└── terraform
+    ├── infrastructure
+    │   ├── backend
+    │   │   ├── dev.tfbackend
+    │   │   ├── dev.tfbackend.example
+    │   │   ├── terraform.dev.tfvars
+    │   │   └── terraform.dev.tfvars.example
+    │   ├── data.tf
+    │   ├── locals.tf
+    │   ├── main.tf
+    │   ├── provider.tf
+    │   └── variables.tf
+    ├── manifests
+    │   └── cluster_issuer.yaml
+    └── modules
+        ├── aks
+        │   ├── main.tf
+        │   ├── outputs.tf
+        │   └── variables.tf
+        ├── mysql
+        │   ├── main.tf
+        │   ├── outputs.tf
+        │   └── variables.tf
+        ├── psql
+        │   ├── main.tf
+        │   ├── outputs.tf
+        │   └── variables.tf
+        ├── tools
+        │   ├── cert_manager.tf
+        │   ├── external_dns.tf
+        │   ├── ingress.tf
+        │   └── variables.tf
+        └── wordpress
+            ├── main.tf
+            ├── outputs.tf
+            └── variables.tf
+```

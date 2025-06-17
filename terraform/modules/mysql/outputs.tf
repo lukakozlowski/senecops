@@ -1,5 +1,6 @@
 output "password" {
-  value = random_password.mysql.result
+  value     = random_password.mysql.result
+  sensitive = true
 }
 
 output "user" {

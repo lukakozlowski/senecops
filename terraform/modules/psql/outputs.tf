@@ -1,5 +1,6 @@
 output "password" {
-  value = random_password.postgresql.result
+  value     = random_password.postgresql.result
+  sensitive = true
 }
 
 output "user" {

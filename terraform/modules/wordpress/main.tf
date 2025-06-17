@@ -5,23 +5,23 @@ resource "random_password" "wordpress" {
   override_special = "!#$%*()-_=+[]{}<>?"
 }
 
-# # Database credentials
-# resource "kubernetes_secret" "db_wp_creds_secret" {
-#   metadata {
-#     name      = "db-wp-creds"
-#     namespace = var.namespace
-#   }
-#
-#   data = {
-#     user     = base64encode(var.user)
-#     password = base64encode(var.password)
-#     host     = base64encode(var.host)
-#     database = base64encode(var.db_name)
-#     port     = base64encode(var.port)
-#   }
-#
-#   type = "Opaque"
-# }
+# Database credentials
+resource "kubernetes_secret" "db_wp_creds_secret" {
+  metadata {
+    name      = "db-wp-creds"
+    namespace = var.namespace
+  }
+
+  data = {
+    user     = base64encode(var.user)
+    password = base64encode(var.password)
+    host     = base64encode(var.host)
+    database = base64encode(var.db_name)
+    port     = base64encode(var.port)
+  }
+
+  type = "Opaque"
+}
 
 # WordPress
 resource "helm_release" "wordpress" {
@@ -35,7 +35,7 @@ resource "helm_release" "wordpress" {
   values = [
     yamlencode({
       wordpressUsername = "senecops"
-      wordpressPassword = random_password.wordpress.result
+      wordpressPassword = sensitive(random_password.wordpress.result)
       wordpressEmail    = "lkz@spyro-soft.com" #TODO: could be general email address for IT department
       wordpressBlogName = "SenecOps"
 
@@ -45,11 +45,11 @@ resource "helm_release" "wordpress" {
 
       externalDatabase = {
         host     = var.host
-        user     = var.user
-        password = var.password
+        user     = sensitive(var.user)
+        password = sensitive(var.password)
         database = var.db_name
         port     = var.port
-        # existingSecret = kubernetes_secret.db_wp_creds_secret.metadata.0.name
+        # existingSecret = kubernetes_secret.db_wp_creds_secret.metadata.0.name # TODO: next time :)
       }
 
       replicaCount : 3
@@ -76,8 +76,6 @@ resource "helm_release" "wordpress" {
           "external-dns.alpha.kubernetes.io/hostname" = var.domain_name
         }
       }
-
-
 
       service = {
         type = "ClusterIP"

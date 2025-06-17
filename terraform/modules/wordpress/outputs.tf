@@ -1,3 +1,4 @@
 output "wp_password" {
-  value = random_password.wordpress.result
+  value     = random_password.wordpress.result
+  sensitive = true
 }

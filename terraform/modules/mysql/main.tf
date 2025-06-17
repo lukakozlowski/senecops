@@ -37,7 +37,7 @@ resource "azurerm_mysql_flexible_database" "database" {
   server_name         = azurerm_mysql_flexible_server.main.name
 }
 
-# MySQL Configuration
+# MySQL Configuration # TODO: WordPress required it, perhaps I could spend some more time on that to fix it
 resource "azurerm_mysql_flexible_server_configuration" "tls_off" {
   name                = "require_secure_transport"
   server_name         = azurerm_mysql_flexible_server.main.name
